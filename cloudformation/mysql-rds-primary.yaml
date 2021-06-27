@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Create a DB subnet group and MYSQL Database"
+
+Parameters:
+  VPC:
+    Type: String
+    Description: The VPC to create the cluster
+    Default: vpc-0808773b79a76995f
+  IdentifierPrefix:
+    Type: String
+    Description: The VPC to create the cluster
+    Default: primary
+    AllowedValues: ['primary', 'secodary']
+
+  DatabaseSecurityGroup:
+    Type: String
+    Description: The VPC to create the cluster
+    Default: sg-01755aa4ee654ad41
+
+  PrivateSubnet01:
+    Type: String
+    Description: The subnet for the DB cluster
+    Default: subnet-0b928a26e3e187ece
+
+  PrivateSubnet02:
+    Type: String
+    Description: The subnet for the DB cluster
+    Default: subnet-03c9bd1c760bcc2b2
+
+  MasterUsername:
+    NoEcho: 'true'
+    Description: The database admin account username
+    Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+
+  MasterUserPassword:
+    NoEcho: 'true'
+    Description: The database admin account password
+    Type: String
+    MinLength: '1'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]+'
+    ConstraintDescription: must contain only alphanumeric characters.
+
+  DBAllocatedStorage:
+    Default: '5'
+    Description: The size of the database (Gb)
+    Type: Number
+    MinValue: '5'
+    MaxValue: '1024'
+    ConstraintDescription: must be between 5 and 1024Gb.
+
+  DBInstanceClass:
+    Description: The database instance type
+    Type: String
+    Default: db.t2.small
+    AllowedValues: [db.t1.micro, db.m1.small, db.m1.medium, db.m1.large, db.m1.xlarge,
+      db.m2.xlarge, db.m2.2xlarge, db.m2.4xlarge, db.m3.medium, db.m3.large, db.m3.xlarge,
+      db.m3.2xlarge, db.m4.large, db.m4.xlarge, db.m4.2xlarge, db.m4.4xlarge, db.m4.10xlarge,
+      db.r3.large, db.r3.xlarge, db.r3.2xlarge, db.r3.4xlarge, db.r3.8xlarge, db.m2.xlarge,
+      db.m2.2xlarge, db.m2.4xlarge, db.cr1.8xlarge, db.t2.micro, db.t2.small, db.t2.medium,
+      db.t2.large]
+    ConstraintDescription: must select a valid database instance type.
+
+  MultiAZ:
+    Description: Multi-AZ master database
+    Type: String
+    Default: true
+    AllowedValues: 
+      - true
+      - false
+    ConstraintDescription: must be true or false.
+
+  ParameterGroup:
+    Type: String
+    Description: The name of the database parameter group created.
+
+Resources:
+  RDSDBSubnetGroup:
+      Type: "AWS::RDS::DBSubnetGroup"
+      Properties:
+          DBSubnetGroupDescription: "Subnet Group for mySQL database"
+          DBSubnetGroupName: !Sub "${AWS::Region}-database-subnet-group"
+          SubnetIds: 
+            - !Ref PrivateSubnet01
+            - !Ref PrivateSubnet02
+
+  RDSDBInstance:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        DBInstanceIdentifier: !Sub "${IdentifierPrefix}-database1"
+        AllocatedStorage: !Ref DBAllocatedStorage
+        DBInstanceClass: !Ref DBInstanceClass
+        Engine: "MySQL"
+        MasterUsername: user1232
+        DBName: MySQLDatabase1
+        MasterUserPassword: mydsqlb1232
+        BackupRetentionPeriod: 7
+        MultiAZ: !Ref MultiAZ
+        # DeletionProtection: true
+        DBSubnetGroupName: !Ref RDSDBSubnetGroup
+        VPCSecurityGroups: 
+          - !Ref DatabaseSecurityGroup
+        Tags:
+        - Key: Name
+          Value: Source Database
+
+Outputs:
+  PrimaryRDSInstance:
+    Description: The DB Cluster Name
+    Value: !Ref RDSDBInstance
+    
+  SubnetGroup:
+    Description: The db subnet group name 
+    Value: !Ref RDSDBSubnetGroup

@@ -1,0 +1,51 @@
+[ec2-user@ip-10-1-10-144 ~]$ mysql -h secondary-database1.cz376evaaukl.us-east-1.rds.amazonaws.com -P 3306 -u user1232 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 26
+Server version: 8.0.20 Source distribution
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| MySQLDatabase1     |
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> use MySQLDatabase1;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> SHOW TABLES;
++--------------------------+
+| Tables_in_MySQLDatabase1 |
++--------------------------+
+| authors                  |
++--------------------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM authors;
++----+---------------+-----------------+-----------------+
+| id | title         | author          | submission_date |
++----+---------------+-----------------+-----------------+
+|  1 | Learn PHP     | John Poul       | 2021-06-26      |
+|  2 | Learn C++     | JoJo SMITH      | 2021-06-26      |
+|  3 | Learn Flutter | Jovanni Cadogan | 2021-06-26      |
++----+---------------+-----------------+-----------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO authors (title, author, submission_date) VALUES ("Learn React", "Gia Cadogan", NOW());
+ERROR 1290 (HY000): The MySQL server is running with the --read-only option so it cannot execute this statement
+mysql> 

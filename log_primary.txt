@@ -1,0 +1,96 @@
+(base) clivecadogans-iMac:Downloads clivecadogan$ ssh -i "usage_keypem.pem" ec2-user@ec2-34-217-107-202.us-west-2.compute.amazonaws.com
+Last login: Thu Jun 24 01:17:38 2021 from 190.213.159.68
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux 2 AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-2/
+[ec2-user@ip-10-1-10-11 ~]$ mysql -h primary-database1.crgeentezray.us-west-2.rds.amazonaws.com -P 3306 -u user1232 -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 16
+Server version: 8.0.20 Source distribution
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create table authors(
+    ->    id INT NOT NULL AUTO_INCREMENT,
+    ->    title VARCHAR(100) NOT NULL,
+    ->    author VARCHAR(40) NOT NULL,
+    ->    submission_date DATE,
+    ->    PRIMARY KEY ( id )
+    -> );
+ERROR 1046 (3D000): No database selected
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| MySQLDatabase1     |
+| information_schema |
+| mysql              |
+| performance_schema |
++--------------------+
+4 rows in set (0.02 sec)
+
+mysql> use MySQLDatabase1;
+Database changed
+mysql> create table authors(    id INT NOT NULL AUTO_INCREMENT,    title VARCHAR(100) NOT NULL,    author VARCHAR(40) NOT NULL,    submission_date DATE,    PRIMARY KEY ( id ) );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> SHOW TABLES;
++--------------------------+
+| Tables_in_MySQLDatabase1 |
++--------------------------+
+| authors                   |
++--------------------------+
+1 row in set (0.00 sec)
+
+mysql> INSERT INTO authors (title, author, submission_date) VALUES ("Learn PHP", "John Poul", NOW());
+Query OK, 1 row affected, 1 warning (0.02 sec)
+
+mysql> INSERT INTO authors (title, author, submission_date) VALUES ("Learn PYTHON, "John SMITH, NOW());
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'John SMITH, NOW())' at line 1
+mysql> INSERT INTO authors (title, author, submission_date) VALUES ("Learn PYTHON”, "John SMITH”, NOW());
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'John SMITH”, NOW())' at line 1
+mysql> INSERT INTO authors (title, author, submission_date) VALUES ("Learn PYTHON", "John SMITH", NOW());
+Query OK, 1 row affected, 1 warning (0.02 sec)
+
+mysql> SELECT * FROM authors;
++----+--------------+------------+-----------------+
+| id | title        | author     | submission_date |
++----+--------------+------------+-----------------+
+|  1 | Learn PHP    | John Poul  | 2021-06-24      |
+|  2 | Learn PYTHON | John SMITH | 2021-06-24      |
++----+--------------+------------+-----------------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO authors (title, author, submission_date) VALUES ("Learn C++", "JoJo SMITH", NOW());
+Query OK, 1 row affected, 1 warning (0.01 sec)
+
+mysql> INSERT INTO authors (title, author, submission_date) VALUES ("Learn Flutter", "Jovanni Cadogan", NOW());
+Query OK, 1 row affected, 1 warning (0.02 sec)
+
+mysql> SELECT * FROM authors;
++----+---------------+-----------------+-----------------+
+| id | title         | author          | submission_date |
++----+---------------+-----------------+-----------------+
+|  1 | Learn PHP     | John Poul       | 2021-06-24      |
+|  2 | Learn PYTHON  | John SMITH      | 2021-06-24      |
+|  3 | Learn C++     | JoJo SMITH      | 2021-06-24      |
+|  4 | Learn Flutter | Jovanni Cadogan | 2021-06-24      |
++----+---------------+-----------------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+
+
+
+mysql -h secondary-database1.cz376evaaukl.us-east-1.rds.amazonaws.com -P 3306 -u user1232 -p
+INSERT INTO authors (title, author, submission_date) VALUES ("Learn React", "Gia Cadogan", NOW());
