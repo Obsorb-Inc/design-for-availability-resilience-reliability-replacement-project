@@ -1,5 +1,9 @@
-Since we have a Multi-AZ data base The minimum Recovery Time Objective (RTO) for a single AZ and single region Outage would the time required to detecting a 
-failure in the source db and promoting a replica to master, writer or source database.
+Since we have a Multi-AZ data base The minimum Recovery Time Objective (RTO) for a single AZ Outage would be 30 to 120 seconds the time required to detecting a 
+failure in the source db and promoting a replica to master, writer or source database by the Automated Failover.
 
-The minimum Recovery Point Objective (RPO) for this single-AZ or single-region outage should be equivalent to the replica lag since it utilizes read replicas. 
+Since we have a Multi-AZ data base The minimum Recovery Time Objective (RTO) for a single region Outage would be the time required to detecting and manually promote the replica since this is not aotomated and should take 12 to 15 minutes.
+
+The minimum Recovery Point Objective (RPO) for this single-AZ should zero since RDS a multi-az deployment utilizes synchronous replication
+
+The minimum Recovery Point Objective (RPO) for this single-region outage should be equivalent to the replica lag since it utilizes read replicas. 
 The replica lag is the amount of time the replicais behind the source database. The replica lag varies with latency and the ammount of traffic.
